@@ -20,7 +20,13 @@ export default function App() {
   const [something, setSomething] = useState([]);
   const [pagination, setPagination] = useState([]);
 
-  console.log(pagination);
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [dateofbirth, setDateofbirth] = useState("");
+  const [Country, setCountry] = useState("");
+
+  const [update, setUpdate] = useState(false);
+  const [updateid, setUpdateid] = useState("");
 
   useEffect(() => {
     if (current > 1) {
@@ -61,7 +67,6 @@ export default function App() {
     }
 
     if (selectedDate) {
-      console.log(selectedDate + "Selected");
       filter = filter.filter((user) => {
         const date = user["Date of birth"].split("T")[0];
         return date === selectedDate;
@@ -80,8 +85,69 @@ export default function App() {
     }
   }
 
-  function update() {
-    alert(<h1>Hello</h1>);
+  function create() {
+    axios
+      .post("http://localhost:5000/users", {
+        id: users.length + 1,
+        Id: users.length + 1,
+        "Full Name": fullname,
+        Country: Country,
+        Email: email,
+        "Date of birth": dateofbirth,
+        "Created at": new Date(),
+      })
+      .then(() => {
+        data();
+        setCountry("");
+        setEmail("");
+        setName("");
+        setDateofbirth("");
+        setFullname("");
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function delete_user(id) {
+    axios
+      .delete(`http://localhost:5000/users/${id}`)
+      .then((response) => {
+        data();
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function setUpdating(user, id) {
+    console.log(user.id);
+    setEmail(user["Email"]);
+    setCountry(user["Country"]);
+    setFullname(user["Full Name"]);
+    setDateofbirth(user["Date of birth"].split("T")[0]);
+    setUpdate(true);
+    setUpdateid(user.id);
+    console.log(user);
+  }
+
+  function updating() {
+    axios
+      .put(`http://localhost:5000/users/${updateid}`, {
+        id: updateid,
+        Id: updateid,
+        "Full Name": fullname,
+        Country: Country,
+        Email: email,
+        "Date of birth": dateofbirth,
+      })
+      .then(() => {
+        data();
+        setCountry("");
+        setEmail("");
+        setName("");
+        setFullname("");
+        setDateofbirth("");
+        setUpdate(false);
+        setUpdateid("");
+      })
+      .catch((error) => console.log(error));
   }
 
   return (
@@ -134,9 +200,11 @@ export default function App() {
       </div>
       {!loading && <h2 style={{ textAlign: "center" }}>Loading......</h2>}
       <section className="display_user">
+        {pagination.length === 0 && (
+          <h2 style={{ textAlign: "center" }}>No data</h2>
+        )}
         {pagination &&
           pagination.map((user, index) => {
-            console.log(pagination);
             return (
               <>
                 <div className="display">
@@ -144,7 +212,10 @@ export default function App() {
                   <h4>Email:{user["Email"]}</h4>
                   <h4>Date of Birth:{user["Date of birth"].split("T")[0]}</h4>
                   <h4>Country:{user["Country"]}</h4>
-                  <Button onClick={() => update()}>Update</Button>
+                  <Button onClick={() => setUpdating(user, user.Id)}>
+                    Update
+                  </Button>
+                  <Button onClick={() => delete_user(user.Id)}>Delete</Button>
                 </div>
               </>
             );
@@ -160,6 +231,66 @@ export default function App() {
           }}
         />
       </section>
+      <form className="form">
+        <h3>FORM</h3>
+        <TextField
+          className="inputs"
+          label="Full Name"
+          value={fullname}
+          id="fullname"
+          onChange={(e) => setFullname(e.target.value)}
+        />
+        <TextField
+          className="inputs"
+          type="email"
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <FormControl className="country">
+          <InputLabel id="form_input">Select Country</InputLabel>
+          <Select
+            labelId="form_input"
+            value={Country}
+            onChange={(e) => setCountry(e.target.value)}
+          >
+            {countries &&
+              countries.map((each_country, index) => (
+                <MenuItem key={index} value={each_country}>
+                  {each_country}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+        <TextField
+          className="inputs"
+          label="Date of Birth"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          value={dateofbirth}
+          onChange={(e) => setDateofbirth(e.target.value)}
+        />
+        {!update && (
+          <Button
+            className="inputs"
+            variant="contained"
+            color="primary"
+            onClick={() => create()}
+          >
+            CREATE
+          </Button>
+        )}
+        {update && (
+          <Button
+            className="inputs"
+            variant="contained"
+            color="primary"
+            onClick={() => updating()}
+          >
+            UPDATE
+          </Button>
+        )}
+      </form>
     </>
   );
 }

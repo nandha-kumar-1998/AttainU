@@ -2,6 +2,10 @@
 
 by using this we can able to run the app
 
+## Mock json data
+
+please use the respective mockjson data on port localhost:5000 for usage of datas
+
 ## Mobile responsive
 
 app is mobile responsive

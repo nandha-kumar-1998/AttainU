@@ -17,4 +17,4 @@ used material-ui component
 ## Question mistake
 
 since jsonserever can able to accept format as "id" for delelting or updating the post
-since in question all the datas are given in 'ID' format , user can able to delete and update the post only user have been created
+since in question all the datas are given in 'ID' format , user can able to delete and update the post only user have been created .Ive done by using id so we can able to do update and delete option where i created if not change database id property should be changed in the question

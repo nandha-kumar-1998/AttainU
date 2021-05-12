@@ -80,6 +80,10 @@ export default function App() {
     }
   }
 
+  function update() {
+    alert(<h1>Hello</h1>);
+  }
+
   return (
     <>
       <header className="header">
@@ -138,8 +142,9 @@ export default function App() {
                 <div className="display">
                   <h4>Name:{user["Full Name"]}</h4>
                   <h4>Email:{user["Email"]}</h4>
-                  <h4>Date of Birth:{user["Date of birth"]}</h4>
+                  <h4>Date of Birth:{user["Date of birth"].split("T")[0]}</h4>
                   <h4>Country:{user["Country"]}</h4>
+                  <Button onClick={() => update()}>Update</Button>
                 </div>
               </>
             );

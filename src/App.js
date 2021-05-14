@@ -123,7 +123,7 @@ export default function App() {
     setFullname(user["Full Name"]);
     setDateofbirth(user["Date of birth"].split("T")[0]);
     setUpdate(true);
-    setUpdateid(user.id);
+    setUpdateid(user.Id);
     console.log(user);
   }
 
